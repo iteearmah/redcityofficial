@@ -7,7 +7,8 @@
   <author email="iteearmah@gmail.com">
     Samuel Armah
   </author>
+  <content src="package.json" />
   <platform name="android">
-        <icon src="ic_launcher.png" />
+        <icon src="logo.png" />
     </platform>
 </widget>
