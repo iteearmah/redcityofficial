@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="redcityofficial" version="0.1.0">
-  <name>Redcityofficial</name>
+  <name>RedCityOfficial</name>
   <description>
     RedCityOfficial App
   </description>
@@ -11,4 +11,12 @@
   <platform name="android">
         <icon src="logo.png" />
     </platform>
+     <plugin name="cordova-plugin-dialogs" />
+    <plugin name="cordova-plugin-inappbrowser" />
+    <plugin name="cordova-plugin-network-information" />
+    <plugin name="de.appplant.cordova.plugin.badge" />
+    <plugin name="https://github.com/admob-google/admob-cordova.git" />
+    <plugin name="https://github.com/nchutchind/cordova-plugin-streaming-media.git" />
+    <plugin name="https://github.com/katzer/cordova-plugin-background-mode.git" />
+    <plugin name="https://github.com/apache/cordova-plugin-splashscreen.git" />
 </widget>
