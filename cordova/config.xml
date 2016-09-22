@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="redcityofficial" version="0.1.0">
+  <name>Redcityofficial</name>
+  <description>
+    RedCityOfficial App
+  </description>
+  <author email="iteearmah@gmail.com">
+    Samuel Armah
+  </author>
+  <platform name="android">
+        <icon src="ic_launcher.png" />
+    </platform>
+</widget>
