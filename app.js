@@ -1,6 +1,11 @@
 var loadFeed=require("./load.feed.js");
 var videosFeed=require("./videos.feed.js");
 var newsDetails=require("./news-details.js");
+var googleAnalytics=require("./analytics.js");
+
+googleAnalytics.applyAnalytics();
+admob.initAdmob("ca-app-pub-3282562808664310/2431822278","ca-app-pub-3282562808664310/5267537477");
+admob.showBanner(admob.BannerSize.BANNER,admob.Position.BOTTOM_CENTER);
 function fetch_newslist(view,json_url,key)
 {
    var $ = require("./lib/jquery.js");
