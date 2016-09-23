@@ -19,5 +19,4 @@
     <plugin name="https://github.com/nchutchind/cordova-plugin-streaming-media.git" />
     <plugin name="https://github.com/katzer/cordova-plugin-background-mode.git" />
     <plugin name="https://github.com/apache/cordova-plugin-splashscreen.git" />
-    <plugin name="https://github.com/cmackay/google-analytics-plugin.git" />
 </widget>
