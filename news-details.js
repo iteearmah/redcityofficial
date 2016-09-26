@@ -14,13 +14,13 @@ exports.news_readPage=function(newsItem)
 	var scrollView = new tabris.ScrollView({
 	  left: 0, right: 0, top: 0, bottom: 50
 	}).appendTo(newsDetailpage);
-
+	
 	var imageView = new tabris.ImageView({
 	  left: 0, top: 0, right: 0,
 	  image: newsItem.image_large,
 	  scaleMode: "fill"
 	}).appendTo(scrollView);
-
+	
 	var titleComposite = new tabris.Composite({
   left: 0, right: 0,top:[imageView,2],
   id: "titleComposite",
@@ -53,12 +53,13 @@ exports.news_readPage=function(newsItem)
   markupEnabled: true,
   font: "16px",
 }).appendTo(contentComposite);
+
 var activityIndicator = new tabris.ActivityIndicator({
   centerX: 0,
   centerY: 0
 }).appendTo(newsDetailpage);
 
-	fetch_newsDetails(newsItem.id,newsArticle,activityIndicator);
+	fetch_newsDetails(newsItem,newsArticle,activityIndicator,contentComposite);
 
 scrollView.on("resize", function(widget, bounds) {
   var imageHeight = bounds.height / 2;
@@ -91,23 +92,72 @@ function rgba(r, g, b, a) {
   return "rgba(" + r + "," + g + "," + b + "," +  a + ")";
 }
 
-function fetch_newsDetails(id,newsArticle,activityIndicator)
+function displayVideo(newsItem,page) 
+{
+  var webview = new tabris.WebView({
+  layoutData: {left: 0, top: 0, right: 0, bottom: 0, height:500},
+  url: "http://redcityofficial.com/api/video-view.php?postid="+newsItem.id+"&"+new Date().getTime(),
+  }).appendTo(page);
+}
+
+function testUrlForMedia(pastedData)
+{
+	var success = false;
+	var media   = {};
+	if (pastedData.match('http://(www.)?youtube|youtu\.be')) {
+	    if (pastedData.match('embed')) { youtube_id = pastedData.split(/embed\//)[1].split('"')[0]; }
+	    else { youtube_id = pastedData.split(/v\/|v=|youtu\.be\//)[1].split(/[?&]/)[0]; }
+	    media.type  = "youtube";
+	    media.id    = youtube_id;
+	    success = true;
+	}
+	else if (pastedData.match('http://(player.)?vimeo\.com')) {
+	    vimeo_id = pastedData.split(/video\/|http:\/\/vimeo\.com\//)[1].split(/[?&]/)[0];
+	    media.type  = "vimeo";
+	    media.id    = vimeo_id;
+	    success = true;
+	}
+	else if (pastedData.match('http://player\.soundcloud\.com')) {
+	    soundcloud_url = unescape(pastedData.split(/value="/)[1].split(/["]/)[0]);
+	    soundcloud_id = soundcloud_url.split(/tracks\//)[1].split(/[&"]/)[0];
+	    media.type  = "soundcloud";
+	    media.id    = soundcloud_id;
+	    success = true;
+	}
+	if (success) { return media; }
+	else { console.log('No valid media id detected');}
+	return false;
+}
+
+
+function fetch_newsDetails(newsItem,newsArticle,activityIndicator,contentComposite)
 {
 	activityIndicator.set("visible", true);
 	var article='';
 	var $ = require("./lib/jquery.js");
   $.ajaxSetup({ cache:false });
   $.ajax({
-    url: 'http://redcityofficial.com/api/fetch.article.php?postid='+id,
+    url: 'http://redcityofficial.com/api/fetch.article.php?postid='+newsItem.id,
     dataType: 'json',
     //timeout: 5000,
     success:  function (data) {
-         newsArticle.set("text",data.article);
+         
+         if(newsItem.category=='videos')
+         {
+         	//media=testUrlForMedia(data.article);
+         	displayVideo(newsItem.id,contentComposite);
+         }
+         else
+         {
+         	newsArticle.set("text",data.article);
+         }
          activityIndicator.set("visible", false);
     },error: function(data, errorThrown)
     {
-       console.log('news '+id+'not fetched'+errorThrown);
+       console.log('news '+newsItem.id+'not fetched'+errorThrown);
     }
   });
 }
+
+
 

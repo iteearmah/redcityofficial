@@ -3,8 +3,15 @@ var videosFeed=require("./videos.feed.js");
 var newsDetails=require("./news-details.js");
 var googleAnalytics=require("./analytics.js");
 
-googleAnalytics.applyAnalytics();
-admob.initAdmob("ca-app-pub-3282562808664310/2431822278","ca-app-pub-3282562808664310/5267537477");
+//googleAnalytics.applyAnalytics();
+admob.initAdmob("ca-app-pub-1774560463484862/2539800032","ca-app-pub-1774560463484862/4016533237");
+admob.cacheInterstitial();// load admob Interstitial
+
+/*admob.isInterstitialReady(function(isReady){
+  if(isReady){
+      admob.showInterstitial();
+  }
+});*/
 admob.showBanner(admob.BannerSize.BANNER,admob.Position.BOTTOM_CENTER);
 function fetch_newslist(view,json_url,key)
 {
@@ -214,6 +221,20 @@ createItems(true,pageUrl('news'),IMAGE_SIZE, MARGIN,newsTab,newsDetails,'news_li
 createItems(false,pageUrl('rumors'),IMAGE_SIZE, MARGIN,rumorsTab,newsDetails,'rumors_list');
 createItems(false,pageUrl('videos'),IMAGE_SIZE, MARGIN,fanVideoTab,newsDetails,'videos_list');
 createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails,'opinions_list');
+
+
+ setTimeout(function() {
+  admob.cacheInterstitial();// load admob Interstitial
+   admob.showInterstitial();
+  }, 15000);
+
+ new tabris.Action({
+  title: "Share",
+  image: "images/action_share.png"
+}).on("select", function() {
+  console.log("Action selected.");
+});
+
 //newsCollectionView=createCollectionView(IMAGE_SIZE, MARGIN,newsTab,'news_list');
 //videosCollectionView=createCollectionView(IMAGE_SIZE, MARGIN,fanVideoTab,'videos_list');
 
@@ -225,10 +246,11 @@ createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails
 
 /*loadFeed.getNewsList(pageUrl('videos'),IMAGE_SIZE,MARGIN,fanVideoTab,createCollectionView(IMAGE_SIZE, MARGIN,fanVideoTab,'videos_list'),'videos_list');*/
 tabFolder.on("select", function (widget, tab) {
-  console.log(tab.get("title"));
+  //  admob.showInterstitial();
   if(tab.get("title")=='Fan Videos')
   {
     //createItems(pageUrl('videos'),IMAGE_SIZE, MARGIN,fanVideoTab,'videos_list');
   }
 });
+
 page.open();
