@@ -1,4 +1,4 @@
-exports.news_readPage=function(newsItem)
+exports.news_readPage=function(newsItem,shareAction)
 {
 	var MARGIN_SMALL = 14;
 	var MARGIN = 16;
@@ -8,7 +8,9 @@ exports.news_readPage=function(newsItem)
 	  title: 'News'
 	}).once("resize", function() { // TODO: used "resize" event as workaround for tabris-js#597
 	  //tabris.ui.set("toolbarVisible", false);
+	  
 	});
+
 
 
 	var scrollView = new tabris.ScrollView({
@@ -60,6 +62,10 @@ var activityIndicator = new tabris.ActivityIndicator({
 }).appendTo(newsDetailpage);
 
 	fetch_newsDetails(newsItem,newsArticle,activityIndicator,contentComposite);
+	shareAction.on("select", function() {
+    window.plugins.socialsharing.share(newsItem.title,'RedCityOfficial - '+newsItem.title,null,newsItem.link);
+  });
+	
 
 scrollView.on("resize", function(widget, bounds) {
   var imageHeight = bounds.height / 2;

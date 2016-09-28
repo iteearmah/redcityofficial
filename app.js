@@ -99,9 +99,18 @@ var NEWS_URL='http://redcityofficial.com/api/fetch.posts.php';
 
 tabris.ui.set("background", "#D71A21");
 var page = new tabris.Page({
-  title: 'RedCityOfficial',
+  title: 'RedCityOfficial Beta',
   topLevel: true
 });
+
+
+var shareAction = tabris.create("Action", {
+    title: "Share",
+    image: "images/action_share.png"
+  });
+shareAction.on("select", function() {
+    window.plugins.socialsharing.share('RedCityOfficial','RedCityOfficial ',null,'htt://redcityofficial.com');
+  });
 
 //var drawer = new tabris.Drawer();
 var tabFolder = tabris.create("TabFolder", {
@@ -122,8 +131,12 @@ var createTab = function(title, image) {
   return tabObj;
 };
 
+tabris.app.on("backnavigation", function(app, options) {
+  window.plugins.socialsharing.share('RedCityOfficial','RedCityOfficial ',null,'htt://redcityofficial.com');
+});
 
-function createItems(firstsection=false,json_url,image_size, margin,targt_page,detail_page,storage_key)
+
+function createItems(firstsection=false,json_url,image_size, margin,targt_page,detail_page,shareAction,storage_key)
 {
    localStorage.setItem('current_page_'+storage_key,1);
    var collectionView_News = tabris.create("CollectionView", {
@@ -187,7 +200,10 @@ function createItems(firstsection=false,json_url,image_size, margin,targt_page,d
   });
 
    collectionView_News.on("select", function(target, value) {
-       var newsDetailPage=detail_page.news_readPage(value);
+       var newsDetailPage=detail_page.news_readPage(value,shareAction);
+
+        /**/
+
         newsDetailPage.set('title',value.title+' - News');
         newsDetailPage.open();
     });
@@ -217,10 +233,10 @@ var rumorsTab=createTab('Rumor');
 var fanVideoTab=createTab('Fan Videos');
 var opinionsTab=createTab('Opinions');
 
-createItems(true,pageUrl('news'),IMAGE_SIZE, MARGIN,newsTab,newsDetails,'news_list');
-createItems(false,pageUrl('rumors'),IMAGE_SIZE, MARGIN,rumorsTab,newsDetails,'rumors_list');
-createItems(false,pageUrl('videos'),IMAGE_SIZE, MARGIN,fanVideoTab,newsDetails,'videos_list');
-createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails,'opinions_list');
+createItems(true,pageUrl('news'),IMAGE_SIZE, MARGIN,newsTab,newsDetails,shareAction,'news_list');
+createItems(false,pageUrl('rumors'),IMAGE_SIZE, MARGIN,rumorsTab,newsDetails,shareAction,'rumors_list');
+createItems(false,pageUrl('videos'),IMAGE_SIZE, MARGIN,fanVideoTab,newsDetails,shareAction,'videos_list');
+createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails,shareAction,'opinions_list');
 
 
  setTimeout(function() {
@@ -228,12 +244,7 @@ createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails
    admob.showInterstitial();
   }, 15000);
 
- new tabris.Action({
-  title: "Share",
-  image: "images/action_share.png"
-}).on("select", function() {
-  console.log("Action selected.");
-});
+
 
 //newsCollectionView=createCollectionView(IMAGE_SIZE, MARGIN,newsTab,'news_list');
 //videosCollectionView=createCollectionView(IMAGE_SIZE, MARGIN,fanVideoTab,'videos_list');
