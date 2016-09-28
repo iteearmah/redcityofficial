@@ -20,4 +20,5 @@
     <plugin name="https://github.com/katzer/cordova-plugin-background-mode.git" />
     <plugin name="https://github.com/apache/cordova-plugin-splashscreen.git" />
     <plugin name="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" />
+    <plugin name="https://github.com/Glitchbone/CordovaYoutubeVideoPlayer.git" />
 </widget>

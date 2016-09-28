@@ -97,21 +97,41 @@ var MARGIN = 12;
 var MARGIN_LARGE = 24;
 var NEWS_URL='http://redcityofficial.com/api/fetch.posts.php';
 
+
+
+
+//////////////////////////////////////////////////////
 tabris.ui.set("background", "#D71A21");
+var drawer = new tabris.Drawer()
+  .on("open", function() {
+    console.log("drawer opened");
+  })
+  .on("close", function() {
+    console.log("drawer closed");
+  });
+  new tabris.ImageView({
+  image: "images/header.jpg",
+  scaleMode: "fill",
+  layoutData: {left: 0, right: 0, top: 0, height: 200}
+}).appendTo(drawer);
+
+
+
+
 var page = new tabris.Page({
+  image: "images/logo.png", 
   title: 'RedCityOfficial Beta',
   topLevel: true
 });
 
 
 var shareAction = tabris.create("Action", {
+    id: "shareaction",
     title: "Share",
     image: "images/action_share.png"
   });
-shareAction.on("select", function() {
-    window.plugins.socialsharing.share('RedCityOfficial','RedCityOfficial ',null,'htt://redcityofficial.com');
-  });
 
+tabris.ui.children("#shareaction").set("visible",false);
 //var drawer = new tabris.Drawer();
 var tabFolder = tabris.create("TabFolder", {
   left: 0, top: 0, right: 0, bottom: 0,
@@ -131,10 +151,9 @@ var createTab = function(title, image) {
   return tabObj;
 };
 
-tabris.app.on("backnavigation", function(app, options) {
-  window.plugins.socialsharing.share('RedCityOfficial','RedCityOfficial ',null,'htt://redcityofficial.com');
-});
 
+
+/////////////////////////////////////
 
 function createItems(firstsection=false,json_url,image_size, margin,targt_page,detail_page,shareAction,storage_key)
 {
@@ -242,7 +261,7 @@ createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails
  setTimeout(function() {
   admob.cacheInterstitial();// load admob Interstitial
    admob.showInterstitial();
-  }, 15000);
+  }, 20000);
 
 
 

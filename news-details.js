@@ -8,10 +8,11 @@ exports.news_readPage=function(newsItem,shareAction)
 	  title: 'News'
 	}).once("resize", function() { // TODO: used "resize" event as workaround for tabris-js#597
 	  //tabris.ui.set("toolbarVisible", false);
-	  
+
 	});
 
-
+	newsDetailpage.on("appear", function() { actionShareVisbility(true); })
+  	newsDetailpage.on("disappear", function() { actionShareVisbility(false); });
 
 	var scrollView = new tabris.ScrollView({
 	  left: 0, right: 0, top: 0, bottom: 50
@@ -167,3 +168,6 @@ function fetch_newsDetails(newsItem,newsArticle,activityIndicator,contentComposi
 
 
 
+function actionShareVisbility(isVisible) {
+  tabris.ui.children("#shareaction").set("visible",isVisible);
+}
