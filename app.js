@@ -119,7 +119,6 @@ var drawer = new tabris.Drawer()
 
 
 var page = new tabris.Page({
-  image: "images/logo.png", 
   title: 'RedCityOfficial Beta',
   topLevel: true
 });
@@ -282,5 +281,4 @@ tabFolder.on("select", function (widget, tab) {
     //createItems(pageUrl('videos'),IMAGE_SIZE, MARGIN,fanVideoTab,'videos_list');
   }
 });
-
 page.open();

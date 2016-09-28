@@ -151,8 +151,27 @@ function fetch_newsDetails(newsItem,newsArticle,activityIndicator,contentComposi
          
          if(newsItem.category=='videos')
          {
-         	//media=testUrlForMedia(data.article);
-         	displayVideo(newsItem.id,contentComposite);
+         	media=testUrlForMedia(data.article);
+         	//displayVideo(newsItem.id,contentComposite);
+         	var videoId=media.id;
+         	videoId=videoId.replace(/(\?.*)|(#.*)/g, "");
+         	console.log(videoId);
+         	new tabris.Button({
+			  layoutData: {left: 0, top: 10, right:0},
+			  text: 'Play Video'
+			}).on('select', function() {
+			  YoutubeVideoPlayer.openVideo(videoId);
+			}).appendTo(contentComposite);
+         	
+         	if(videoId)
+         	{
+         		YoutubeVideoPlayer.openVideo(videoId);
+         	}
+         	else
+         	{
+         		newsArticle.set("text",'Video couldn\'t be played. <p><a href="'+newsItem.link+'">Watch in browser</a></p>');
+         	}
+         	
          }
          else
          {
