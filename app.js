@@ -2,121 +2,35 @@ var loadFeed=require("./load.feed.js");
 var videosFeed=require("./videos.feed.js");
 var newsDetails=require("./news-details.js");
 var googleAnalytics=require("./analytics.js");
+var drawable=require("./drawable.js");
+var aboutPage=require('./pages/about.js');
 
-//googleAnalytics.applyAnalytics();
-admob.initAdmob("ca-app-pub-1774560463484862/2539800032","ca-app-pub-1774560463484862/4016533237");
-admob.cacheInterstitial();// load admob Interstitial
-
-/*admob.isInterstitialReady(function(isReady){
-  if(isReady){
-      admob.showInterstitial();
-  }
-});*/
-admob.showBanner(admob.BannerSize.BANNER,admob.Position.BOTTOM_CENTER);
-function fetch_newslist(view,json_url,key)
-{
-   var $ = require("./lib/jquery.js");
-  var items = [];
-  $.ajaxSetup({ cache:false });
-  $.ajax({
-    url: json_url,
-    dataType: 'json',
-    //timeout: 5000,
-    success:  function (data) {
-          localStorage.setItem(key,JSON.stringify(data));
-          load_news(view,data,key);
-
-          /*load_topNews(data,key,topStoryImage,topStoryTitle);*/
-          },error: function(data, errorThrown)
-          {
-             console.log('news not fetched'+errorThrown);
-          }
-  });
-}
-
-function loadNewItems(view,json_url,key)
-{
-   var $ = require("./lib/jquery.js");
-  var items = [];
-  itemsView = view.get("items");
-  //page=parseInt(itemsView[itemsView.length-1].page);
-  current_page=localStorage.getItem('current_page_'+key);
-  current_page++;
-  console.log('current_page: '+current_page);
-  localStorage.setItem('current_page_'+key,current_page);
-   json_url=json_url+'&page='+current_page;
-   //console.log(json_url);
-  $.ajaxSetup({ cache:false });
-  $.ajax({
-    url: json_url,
-    dataType: 'json',
-    //timeout: 5000,
-    success:  function (data) {
-          localStorage.setItem(key,JSON.stringify(data));
-          view.insert(data.items);
-          //load_news(view,data.items,key);
-          /*load_topNews(data,key,topStoryImage,topStoryTitle);*/
-          },error: function(data, errorThrown)
-          {
-             console.log('news not fetched'+errorThrown);
-          }
-  });
-}
-
-function load_news(view,newsData,key)
-{
-  newsitems=JSON.parse(localStorage.getItem(key));
-    view.set({
-      items: newsitems,
-      refreshIndicator: true,
-      refreshMessage: ""
-    });
-  
-  newsitems=newsData.items;
-  setTimeout(function() {
-    view.set({
-      items: newsitems,
-      refreshIndicator: false,
-      refreshMessage: "loading..."
-    });
-  }, 3000);
-}
-
-function load_topNews(newsData,key,topStoryImage,topStoryTitle)
-{
-  newsitems=JSON.parse(localStorage.getItem(key));
-  newsitems=newsData.items;
-  topStoryImage.set("image", {src: newsitems[0].image});
-  topStoryTitle.set("title", "<b>"+newsitems[0].title+"</b>");
-  //console.log(newsitems[0].title);
-}
-var IMAGE_PATH='src/images/';
+/**
+  ////////////////////////
+  Configurations
+  ///////////////////////
+*/
+var IMAGE_PATH='images/';
 var PAGE_MARGIN = 16;
 var IMAGE_SIZE = 120;
 var MARGIN = 12;
 var MARGIN_LARGE = 24;
 var NEWS_URL='http://redcityofficial.com/api/fetch.posts.php';
 
-
+var about_page=aboutPage.createAboutPage(PAGE_MARGIN);
 
 
 //////////////////////////////////////////////////////
 tabris.ui.set("background", "#D71A21");
 var drawer = new tabris.Drawer()
   .on("open", function() {
-    console.log("drawer opened");
+    //console.log("drawer opened");
   })
   .on("close", function() {
-    console.log("drawer closed");
+    //console.log("drawer closed");
   });
-  new tabris.ImageView({
-  image: "images/header.jpg",
-  scaleMode: "fill",
-  layoutData: {left: 0, right: 0, top: 0, height: 200}
-}).appendTo(drawer);
-
-
-
+var drawablePages= {about:aboutPage};
+drawable.Menu(drawer,IMAGE_PATH,drawer,drawablePages,PAGE_MARGIN);
 
 var page = new tabris.Page({
   title: 'RedCityOfficial Beta',
@@ -143,13 +57,107 @@ var tabFolder = tabris.create("TabFolder", {
 
 var createTab = function(title, image) {
   var tabObj=tabris.create("Tab", {
-	/*image: {src: image},*/
-		title:title,
+  /*image: {src: image},*/
+    title:title,
     background: "#fff"
   }).appendTo(tabFolder);
   return tabObj;
 };
 
+/////////////////////////////////////////////////
+
+
+
+//googleAnalytics.applyAnalytics();
+admob.initAdmob("ca-app-pub-1774560463484862/2539800032","ca-app-pub-1774560463484862/4016533237");
+admob.cacheInterstitial();// load admob Interstitial
+
+/*admob.isInterstitialReady(function(isReady){
+  if(isReady){
+      admob.showInterstitial();
+  }
+});*/
+admob.showBanner(admob.BannerSize.BANNER,admob.Position.BOTTOM_CENTER);
+
+
+function fetch_newslist(view,json_url,key)
+{
+   var $ = require("./lib/jquery.js");
+  var items = [];
+  $.ajaxSetup({ cache:false });
+  $.ajax({
+    url: json_url,
+    dataType: 'json',
+    //timeout: 5000,
+    success:  function (data) {
+          localStorage.setItem(key,JSON.stringify(data));
+          load_news(view,data,key);
+
+          /*load_topNews(data,key,topStoryImage,topStoryTitle);*/
+          },error: function(data, errorThrown)
+          {
+             //console.log('news not fetched'+errorThrown);
+          }
+  });
+}
+
+function loadNewItems(view,json_url,key)
+{
+   var $ = require("./lib/jquery.js");
+  var items = [];
+  itemsView = view.get("items");
+  //page=parseInt(itemsView[itemsView.length-1].page);
+  current_page=localStorage.getItem('current_page_'+key);
+  current_page++;
+  //console.log('current_page: '+current_page);
+  localStorage.setItem('current_page_'+key,current_page);
+   json_url=json_url+'&page='+current_page;
+   //console.log(json_url);
+  $.ajaxSetup({ cache:false });
+  $.ajax({
+    url: json_url,
+    dataType: 'json',
+    //timeout: 5000,
+    success:  function (data) {
+          localStorage.setItem(key,JSON.stringify(data));
+          view.insert(data.items);
+          //load_news(view,data.items,key);
+          /*load_topNews(data,key,topStoryImage,topStoryTitle);*/
+          },error: function(data, errorThrown)
+          {
+             //console.log('news not fetched'+errorThrown);
+          }
+  });
+}
+
+function load_news(view,newsData,key)
+{
+  
+  newsitems=JSON.parse(localStorage.getItem(key));
+  view.set({
+      items: newsitems,
+      refreshIndicator: true,
+      refreshMessage: ""
+    });
+
+  newsitems=newsData.items;
+  setTimeout(function() {
+    view.set({
+      items: newsitems,
+      refreshIndicator: false,
+      refreshMessage: "loading..."
+    });
+  }, 3000);
+}
+
+function load_topNews(newsData,key,topStoryImage,topStoryTitle)
+{
+  newsitems=JSON.parse(localStorage.getItem(key));
+  newsitems=newsData.items;
+  topStoryImage.set("image", {src: newsitems[0].image});
+  topStoryTitle.set("title", "<b>"+newsitems[0].title+"</b>");
+  //console.log(newsitems[0].title);
+}
 
 
 /////////////////////////////////////
@@ -174,7 +182,7 @@ function createItems(firstsection=false,json_url,image_size, margin,targt_page,d
             textColor: "#000",
           }).appendTo(cell);
           var periodView = tabris.create("TextView", {
-            layoutData: {top: [titleView, 35],left: [imageView, margin], right: 5},
+            layoutData: {top: [titleView, 40],left: [imageView, margin], right: 5},
             markupEnabled: true,
             textColor: "#D71A21"
           }).appendTo(cell);
@@ -210,7 +218,7 @@ function createItems(firstsection=false,json_url,image_size, margin,targt_page,d
             
             if (remaining ==1) 
             {
-              console.log(' items count'+view.get("items").length+' | lastVisibleIndex: '+view.get("lastVisibleIndex"));
+             //console.log(' items count'+view.get("items").length+' | lastVisibleIndex: '+view.get("lastVisibleIndex"));
               loadFeed.loadNewItems(collectionView_News,json_url,storage_key);
             }
 
@@ -259,7 +267,10 @@ createItems(false,pageUrl('opinions'),IMAGE_SIZE, MARGIN,opinionsTab,newsDetails
 
  setTimeout(function() {
   admob.cacheInterstitial();// load admob Interstitial
-   admob.showInterstitial();
+  //admob.isInterstitialReady(function(isReady){
+    admob.showInterstitial();
+  //});
+   
   }, 20000);
 
 
